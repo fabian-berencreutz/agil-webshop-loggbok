@@ -3,6 +3,15 @@
 
 ---
 
+## Vårt agila arbetssätt och veckorutin
+
+Vi har arbetat i enveckas-sprintar med en fast Scrum-struktur varje vecka:
+- **Måndag (Sprintplanering):** Vi startade varje vecka med att gå igenom backloggen, bryta ner user stories till konkreta tasks och sätta ett sprintmål. Vi fördelade uppgifterna och såg till att beroenden mellan frontend och backend identifierades tidigt.
+- **Tisdag, Onsdag, Torsdag (Dagliga avstämningar / Daily Standups):** Korta 10–15 minuters avstämningar där vi gick igenom vad vi gjort, vad vi skulle göra under dagen och om någon stött på hinder (blockers). Detta var extra viktigt för mig när jag jobbade med integrationer och gatewayen så att inte mina ändringar blockerade de andras frontend-arbete.
+- **Fredag (Sprint Review & Retro):** Vi avslutade veckan med review där vi demonstrerade vad som var färdigt och testat mot vår Definition of Done. Direkt efteråt körde vi en kort retro för att reflektera över vad som funkat bra och vad vi behövde förbättra till nästa sprint (t.ex. att ta tag i teknisk skuld eller förbättra dokumentationen).
+
+---
+
 ## Sammanfattning av Sprint 1, 2 och 3 (v. 39 – 42)
 
 Under de första veckorna fokuserade jag mest på att få igång grunden i frontend och se till att den kunde prata med vår backend (`product-service`):
@@ -11,7 +20,7 @@ Under de första veckorna fokuserade jag mest på att få igång grunden i front
 - **Sprint 2 (v. 41):** Här lade jag till stöd för produktkategorier och bildlänkar – både i backend (Java enum/DTO) och i formuläret på frontend (`AddProductPage`). Jag byggde också en route-guard (`AdminRoute`) så att vanliga användare inte kan gå in på admin-sidorna utan att ha admin-rollen.
 - **Sprint 3 (v. 42):** Den här veckan handlade mycket om att städa upp och hjälpa till. Jag fixade en irriterande dubblett i `pom.xml` för backend som låg och spökade med säkerhetsberoendena. I frontend granskade och mergade jag pull requests kring CSS och styling, och vi började snacka ihop oss om att vi behövde en gemensam gateway.
 
-Samarbetet flöt på bra genom dagliga korta avstämningar och att vi alltid körde pull requests och granskade varandras kod innan merge.
+Under dessa sprintar satte vi vår rutin med planering på måndagar och review på fredagar, samt att vi alltid körde pull requests och kodgranskade varandra innan merge till `main`.
 
 ---
 
@@ -29,8 +38,9 @@ Samarbetet flöt på bra genom dagliga korta avstämningar och att vi alltid kö
 - **Lösningen:** Den egenbyggda gatewayen löste portkaoset genom att samla alla anrop bakom en gemensam bas-URL med samlad CORS-konfiguration. För utloggningsproblemet lade jag in en check i frontend mot `/auth/me` vid uppstart som hämtar användarinfon igen med sparad token så att sessionen lever vidare.
 
 ### Samarbete och agilt arbete
-- Eftersom en gemensam gateway ändrade hur alla i teamet anropar backend tog jag upp det på våra standups och förklarade hur proxy-endpoints och tokens fungerade så att ingen blev blockad.
-- Jag samarbetade med de andra i gruppen som byggde vidare på endpoints och tester, och granskade deras pull requests löpande så att vi snabbt fick ihop helheten.
+- På **måndagsplaneringen** kom vi fram till att vi behövde få ordning på arkitekturen och samla anropen via en gateway för att kunna gå vidare med testerna.
+- Under **avstämningarna tisdag–torsdag** var det väldigt smidigt att kunna flagga hur omläggningen till gatewayen gick. Jag förklarade hur de nya proxy-endpoints och cookies fungerade så att varken Axel eller Maryam blev blockerade i sitt arbete med `/auth/me` och mocktester.
+- På **fredagens sprint review** demonstrerade vi hela inloggningsflödet och produktvisningen via gatewayen. På retron efteråt konstaterade vi att gatewayen förenklade miljön rejält, men att vi nu behövde fokusera på affärslogik som lagersaldo till nästa sprint.
 
 ---
 
@@ -48,5 +58,6 @@ Samarbetet flöt på bra genom dagliga korta avstämningar och att vi alltid kö
 - **Lösningen:** Jag lade till en enkel koll i React-komponenten (`stock === 0`) som styr knappens status och visar en tydlig text för användaren. Sedan lade jag till ett `quantity`-state med knappar/input så rätt antal skickas med till varukorgen.
 
 ### Samarbete och agilt arbete
-- Vi synkade ihop backend och frontend så att logiken för att minska lagret (vid köp) och öka lagret (för admin) lirar ihop utan buggar.
-- Vi fortsätter att jobba tätt med vår backlog på GitHub/Trello, hålla korta reviews av varandras kod och se till att inte merga något till `main` förrän testerna rullar grönt i våra workflows.
+- Under **måndagsplaneringen** prioriterade vi köp- och lagerflödet i backloggen. Vi delade upp arbetet så att jag fokuserade på UX och lagervalidering vid köp, medan Maryam tog hand om admin-möjligheten att öka lagret.
+- På **dagliga standups** stämde vi av så att våra ändringar i datamodellen och anropen synkade ihop utan att krocka. 
+- Vi fortsätter att strikt följa vår **Definition of Done**: varje feature körs i en egen branch, granskas via Pull Request av minst en annan i teamet och måste passera GitHub Actions CI innan den mergas till `main`. På fredag har vi review där vi visar upp det kompletta flödet från tomt lager till påfyllning och köp.
